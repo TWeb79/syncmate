@@ -1,0 +1,462 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		155CADDD7AF24F8C72065F4F /* SyncEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609F74E9D3805A498DF0372E /* SyncEngine.swift */; };
+		270DDE9538143566BB16D126 /* JobSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0500A645034C83874C58814 /* JobSettingsView.swift */; };
+		407CFA514CA3809E61D3E25E /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3484B4F12F9C4148847BF7 /* NotificationService.swift */; };
+		47107FAA232B671E8EBDC483 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 571BD8F480820F87126E0814 /* AppState.swift */; };
+		4B333D01D00B099500B73DD8 /* JobHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451D0AE209AA5E7D9E30FEDE /* JobHistoryView.swift */; };
+		4E2C1B6106FD2C576624A34D /* JobScheduleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA833C68BFE134200A97C0E /* JobScheduleView.swift */; };
+		6105227CC3DA5D58EB5CF59E /* JobOverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2492B5F13AF1D95B6FD7B6D5 /* JobOverviewView.swift */; };
+		6931D2B55E0EF53DA730106E /* StatusBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26049C6C011A1D2456679410 /* StatusBadgeView.swift */; };
+		70E867638737B300649D5D39 /* SyncSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD01FEDCCD4A8098C7791559 /* SyncSchedule.swift */; };
+		73AEF98DE045BDDA46893521 /* LogStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50F03A689039D236BA4751FA /* LogStore.swift */; };
+		74D04FA3501D10B022C8CFB6 /* AppSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2A41314189AB183345F2D3D /* AppSettingsView.swift */; };
+		7ADF2E2C7F64850D11C7B821 /* JobLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 665BA1572D5217BA49FE562E /* JobLogView.swift */; };
+		7B9613745440567C548D8832 /* SyncJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = D92BBC27971ECCBBBC4499A2 /* SyncJob.swift */; };
+		8663DC6E36C0B2B59F06D551 /* SyncRunResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1EC5711D8000EC05107648 /* SyncRunResult.swift */; };
+		93A49F9FAF1DDD2D4C10E303 /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6BDB5D70C62065A122EF38D /* EmptyStateView.swift */; };
+		A393003CDB860493435CA1F2 /* LaunchdPlistBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58D999AD0E6621F6F92D3CBB /* LaunchdPlistBuilder.swift */; };
+		B8E048101E70121648B30C1C /* JobListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30B45C7952B8EF351ECC6988 /* JobListView.swift */; };
+		CCC5271FCDE28ECB8E096B6D /* SyncMateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F05CFE6F051AF5E7EE7A31FD /* SyncMateApp.swift */; };
+		D60F619B817261406F27152B /* FilePickerHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACB95E0728ED631F38C5121 /* FilePickerHelper.swift */; };
+		E3417FEA0D0F07B5D6BECA43 /* SchedulerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82E7F414C8B1B887B9ED1E7C /* SchedulerService.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2492B5F13AF1D95B6FD7B6D5 /* JobOverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobOverviewView.swift; sourceTree = "<group>"; };
+		26049C6C011A1D2456679410 /* StatusBadgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBadgeView.swift; sourceTree = "<group>"; };
+		30B45C7952B8EF351ECC6988 /* JobListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobListView.swift; sourceTree = "<group>"; };
+		387FFAF8B7AA8C47886A510E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		3FA05BB5B721F866FF709D24 /* SyncMate.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SyncMate.entitlements; sourceTree = "<group>"; };
+		451D0AE209AA5E7D9E30FEDE /* JobHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobHistoryView.swift; sourceTree = "<group>"; };
+		50F03A689039D236BA4751FA /* LogStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogStore.swift; sourceTree = "<group>"; };
+		571BD8F480820F87126E0814 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		583FB5CBB85CB8F8F92A27E6 /* SyncMate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SyncMate.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		58D999AD0E6621F6F92D3CBB /* LaunchdPlistBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchdPlistBuilder.swift; sourceTree = "<group>"; };
+		609F74E9D3805A498DF0372E /* SyncEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncEngine.swift; sourceTree = "<group>"; };
+		665BA1572D5217BA49FE562E /* JobLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobLogView.swift; sourceTree = "<group>"; };
+		7ACB95E0728ED631F38C5121 /* FilePickerHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePickerHelper.swift; sourceTree = "<group>"; };
+		7CA833C68BFE134200A97C0E /* JobScheduleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobScheduleView.swift; sourceTree = "<group>"; };
+		82E7F414C8B1B887B9ED1E7C /* SchedulerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulerService.swift; sourceTree = "<group>"; };
+		A6BDB5D70C62065A122EF38D /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
+		AA3484B4F12F9C4148847BF7 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		B0500A645034C83874C58814 /* JobSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobSettingsView.swift; sourceTree = "<group>"; };
+		CD01FEDCCD4A8098C7791559 /* SyncSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncSchedule.swift; sourceTree = "<group>"; };
+		D92BBC27971ECCBBBC4499A2 /* SyncJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncJob.swift; sourceTree = "<group>"; };
+		DD1EC5711D8000EC05107648 /* SyncRunResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncRunResult.swift; sourceTree = "<group>"; };
+		F05CFE6F051AF5E7EE7A31FD /* SyncMateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncMateApp.swift; sourceTree = "<group>"; };
+		F2A41314189AB183345F2D3D /* AppSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0F90DD3662A3E87B8C5D5FC3 /* SyncMate */ = {
+			isa = PBXGroup;
+			children = (
+				387FFAF8B7AA8C47886A510E /* Info.plist */,
+				3FA05BB5B721F866FF709D24 /* SyncMate.entitlements */,
+				8FFE2AF60291A4D2635A13B7 /* App */,
+				82FDD1440B48E6500E1A4F50 /* Models */,
+				5999622B5CCA5CCFD1AD0E5A /* Services */,
+				134520548283B369D0F70078 /* Utilities */,
+				BCF833AFEEB0F29966E8F1D0 /* Views */,
+			);
+			path = SyncMate;
+			sourceTree = "<group>";
+		};
+		134520548283B369D0F70078 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				7ACB95E0728ED631F38C5121 /* FilePickerHelper.swift */,
+				58D999AD0E6621F6F92D3CBB /* LaunchdPlistBuilder.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		1B77BDEE104B5B26623C9214 = {
+			isa = PBXGroup;
+			children = (
+				0F90DD3662A3E87B8C5D5FC3 /* SyncMate */,
+				9038EB8B2822B924DAC6A184 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2D7B1C9F04AE66D32FB74901 /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				451D0AE209AA5E7D9E30FEDE /* JobHistoryView.swift */,
+				665BA1572D5217BA49FE562E /* JobLogView.swift */,
+				2492B5F13AF1D95B6FD7B6D5 /* JobOverviewView.swift */,
+				7CA833C68BFE134200A97C0E /* JobScheduleView.swift */,
+				B0500A645034C83874C58814 /* JobSettingsView.swift */,
+			);
+			path = Detail;
+			sourceTree = "<group>";
+		};
+		5999622B5CCA5CCFD1AD0E5A /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				50F03A689039D236BA4751FA /* LogStore.swift */,
+				AA3484B4F12F9C4148847BF7 /* NotificationService.swift */,
+				82E7F414C8B1B887B9ED1E7C /* SchedulerService.swift */,
+				609F74E9D3805A498DF0372E /* SyncEngine.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		701463EF0DD5484864E53CF2 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				A6BDB5D70C62065A122EF38D /* EmptyStateView.swift */,
+				26049C6C011A1D2456679410 /* StatusBadgeView.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		82FDD1440B48E6500E1A4F50 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				D92BBC27971ECCBBBC4499A2 /* SyncJob.swift */,
+				DD1EC5711D8000EC05107648 /* SyncRunResult.swift */,
+				CD01FEDCCD4A8098C7791559 /* SyncSchedule.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		8FFE2AF60291A4D2635A13B7 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				571BD8F480820F87126E0814 /* AppState.swift */,
+				F05CFE6F051AF5E7EE7A31FD /* SyncMateApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		9038EB8B2822B924DAC6A184 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				583FB5CBB85CB8F8F92A27E6 /* SyncMate.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BBCD181947FD409002C310A8 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				F2A41314189AB183345F2D3D /* AppSettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		BCF833AFEEB0F29966E8F1D0 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				2D7B1C9F04AE66D32FB74901 /* Detail */,
+				BBCD181947FD409002C310A8 /* Settings */,
+				701463EF0DD5484864E53CF2 /* Shared */,
+				FC3F0C464660180FE812700E /* Sidebar */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		FC3F0C464660180FE812700E /* Sidebar */ = {
+			isa = PBXGroup;
+			children = (
+				30B45C7952B8EF351ECC6988 /* JobListView.swift */,
+			);
+			path = Sidebar;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		14919AC6FD38533B993764C6 /* SyncMate */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6A55F29DE1BE53BD640CD93B /* Build configuration list for PBXNativeTarget "SyncMate" */;
+			buildPhases = (
+				2D32886BD6B0912511263874 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SyncMate;
+			packageProductDependencies = (
+			);
+			productName = SyncMate;
+			productReference = 583FB5CBB85CB8F8F92A27E6 /* SyncMate.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E29B224E20A0830A1F4A53C1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 2640;
+				TargetAttributes = {
+					14919AC6FD38533B993764C6 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Manual;
+					};
+				};
+			};
+			buildConfigurationList = 8DC3673E2A2BC6EBFD285C6B /* Build configuration list for PBXProject "SyncMate" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 1B77BDEE104B5B26623C9214;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 9038EB8B2822B924DAC6A184 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				14919AC6FD38533B993764C6 /* SyncMate */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2D32886BD6B0912511263874 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				74D04FA3501D10B022C8CFB6 /* AppSettingsView.swift in Sources */,
+				47107FAA232B671E8EBDC483 /* AppState.swift in Sources */,
+				93A49F9FAF1DDD2D4C10E303 /* EmptyStateView.swift in Sources */,
+				D60F619B817261406F27152B /* FilePickerHelper.swift in Sources */,
+				4B333D01D00B099500B73DD8 /* JobHistoryView.swift in Sources */,
+				B8E048101E70121648B30C1C /* JobListView.swift in Sources */,
+				7ADF2E2C7F64850D11C7B821 /* JobLogView.swift in Sources */,
+				6105227CC3DA5D58EB5CF59E /* JobOverviewView.swift in Sources */,
+				4E2C1B6106FD2C576624A34D /* JobScheduleView.swift in Sources */,
+				270DDE9538143566BB16D126 /* JobSettingsView.swift in Sources */,
+				A393003CDB860493435CA1F2 /* LaunchdPlistBuilder.swift in Sources */,
+				73AEF98DE045BDDA46893521 /* LogStore.swift in Sources */,
+				407CFA514CA3809E61D3E25E /* NotificationService.swift in Sources */,
+				E3417FEA0D0F07B5D6BECA43 /* SchedulerService.swift in Sources */,
+				6931D2B55E0EF53DA730106E /* StatusBadgeView.swift in Sources */,
+				155CADDD7AF24F8C72065F4F /* SyncEngine.swift in Sources */,
+				7B9613745440567C548D8832 /* SyncJob.swift in Sources */,
+				CCC5271FCDE28ECB8E096B6D /* SyncMateApp.swift in Sources */,
+				8663DC6E36C0B2B59F06D551 /* SyncRunResult.swift in Sources */,
+				70E867638737B300649D5D39 /* SyncSchedule.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		076885FCD82361A61F2F7E8C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = SyncMate/SyncMate.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				INFOPLIST_FILE = SyncMate/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.syncmate.app;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		2475531E41F07E6363D74C3A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = SyncMate;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		413F4B02EE1C0E3178D5EDD7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = SyncMate/SyncMate.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEAD_CODE_STRIPPING = YES;
+				INFOPLIST_FILE = SyncMate/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.syncmate.app;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		C0BC74343B7D41E5D2A93041 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = SyncMate;
+				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6A55F29DE1BE53BD640CD93B /* Build configuration list for PBXNativeTarget "SyncMate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				413F4B02EE1C0E3178D5EDD7 /* Debug */,
+				076885FCD82361A61F2F7E8C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8DC3673E2A2BC6EBFD285C6B /* Build configuration list for PBXProject "SyncMate" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2475531E41F07E6363D74C3A /* Debug */,
+				C0BC74343B7D41E5D2A93041 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E29B224E20A0830A1F4A53C1 /* Project object */;
+}
