@@ -50,6 +50,13 @@ struct EmptyStateView: View {
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)
             }
+            
+            if actionTitle != nil {
+                Text("Press ⌘N to create your first sync job")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .padding(.top, 8)
+            }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(nsColor: .windowBackgroundColor).opacity(0.5))

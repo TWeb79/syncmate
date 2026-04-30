@@ -18,6 +18,7 @@ struct JobScheduleView: View {
                 Button(action: { showingAddSchedule = true }) {
                     Label("Add Schedule", systemImage: "plus")
                 }
+                .help("Add a new schedule for this sync job")
             }
             
             if job.schedules.isEmpty {
@@ -57,7 +58,7 @@ struct JobScheduleView: View {
     private var scheduleList: some View {
         VStack(spacing: 12) {
             ForEach($job.schedules) { $schedule in
-                ScheduleRowView(schedule: $schedule, job: job, appState: appState)
+                ScheduleRowView(schedule: $schedule, job: $job, appState: appState)
             }
         }
     }
@@ -66,7 +67,7 @@ struct JobScheduleView: View {
 /// Row view for a single schedule
 struct ScheduleRowView: View {
     @Binding var schedule: SyncSchedule
-    let job: SyncJob
+    @Binding var job: SyncJob
     @ObservedObject var appState: AppState
     @State private var showingDeleteConfirmation = false
     
@@ -76,6 +77,7 @@ struct ScheduleRowView: View {
                 HStack {
                     Toggle("", isOn: $schedule.isEnabled)
                         .labelsHidden()
+                        .help("Enable or disable this schedule")
                     Text(schedule.scheduleType.rawValue)
                         .fontWeight(.medium)
                 }
@@ -94,6 +96,7 @@ struct ScheduleRowView: View {
                     .foregroundColor(.red)
             }
             .buttonStyle(.borderless)
+            .help("Delete this schedule")
         }
         .padding()
         .background(Color(nsColor: .controlBackgroundColor))
@@ -112,7 +115,9 @@ struct ScheduleRowView: View {
             Button("Cancel", role: .cancel) {}
             Button("Delete", role: .destructive) {
                 try? SchedulerService.shared.disableSchedule(for: job, schedule: schedule)
-                schedule.isEnabled = false
+                if let index = job.schedules.firstIndex(where: { $0.id == schedule.id }) {
+                    job.schedules.remove(at: index)
+                }
                 appState.saveJobs()
             }
         } message: {
@@ -138,17 +143,20 @@ struct AddScheduleView: View {
                 .font(.headline)
             
             Form {
-                Picker("Type", selection: $scheduleType) {
-                    Text("Every N Minutes").tag(ScheduleType.interval)
-                    Text("Daily").tag(ScheduleType.daily)
-                    Text("Weekly").tag(ScheduleType.weekly)
-                }
+            Picker("Type", selection: $scheduleType) {
+                Text("Every N Minutes").tag(ScheduleType.interval)
+                Text("Daily").tag(ScheduleType.daily)
+                Text("Weekly").tag(ScheduleType.weekly)
+            }
+            .help("Select the schedule type")
                 
                 switch scheduleType {
                 case .interval:
                     Stepper("Every \(intervalMinutes) minutes", value: $intervalMinutes, in: 1...1440)
+                        .help("Set the sync interval in minutes")
                 case .daily:
                     DatePicker("Time", selection: $dailyTime, displayedComponents: .hourAndMinute)
+                        .help("Select the daily sync time")
                 case .weekly:
                     WeekdayPicker(selectedDays: $selectedWeekdays)
                 case .manual:
@@ -163,12 +171,14 @@ struct AddScheduleView: View {
                     dismiss()
                 }
                 .buttonStyle(.bordered)
+                .help("Cancel without adding schedule")
                 Spacer()
                 Button("Add") {
                     addSchedule()
                     dismiss()
                 }
                 .buttonStyle(.borderedProminent)
+                .help("Add this schedule to the job")
                 .disabled(scheduleType == .weekly && selectedWeekdays.isEmpty)
             }
         }

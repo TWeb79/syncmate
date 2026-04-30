@@ -52,9 +52,24 @@ struct LaunchdPlistBuilder {
             calendar.timeZone = TimeZone.current
             var components = calendar.dateComponents([.hour, .minute], from: timeOfDay)
             components.second = 0
-            // Use the first weekday as the representative (launchd will handle all via separate entries if needed)
-            components.weekday = schedule.weekdays.first?.calendarWeekday ?? 1
-            plist["StartCalendarInterval"] = components
+            
+            if schedule.weekdays.count == 1 {
+                components.weekday = schedule.weekdays.first!.calendarWeekday
+                plist["StartCalendarInterval"] = components
+            } else {
+                // Multiple weekdays: create array of components
+                var intervals: [[String: Any]] = []
+                for weekday in schedule.weekdays {
+                    var comp = components
+                    comp.weekday = weekday.calendarWeekday
+                    intervals.append([
+                        "Weekday": weekday.calendarWeekday,
+                        "Hour": comp.hour!,
+                        "Minute": comp.minute!
+                    ])
+                }
+                plist["StartCalendarInterval"] = intervals
+            }
             
         case .manual:
             // No automatic scheduling - only run manually or via login/wake triggers

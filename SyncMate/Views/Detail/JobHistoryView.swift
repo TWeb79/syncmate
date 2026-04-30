@@ -1,4 +1,5 @@
 import SwiftUI
+import UniformTypeIdentifiers
 
 // Author = "Inventions4All - github:TWeb79"
 
@@ -20,10 +21,24 @@ struct JobHistoryView: View {
     
     var body: some View {
         VStack(spacing: 0) {
+            // Toolbar with export
+            HStack {
+                Text("History")
+                    .font(.headline)
+                Spacer()
+                Button(action: exportHistory) {
+                    Label("Export", systemImage: "square.and.arrow.up")
+                }
+                .help("Export history to CSV file")
+            }
+            .padding(.horizontal, 8)
+            .padding(.top, 4)
+            
             // Filter bar
             HStack {
                 TextField("Search history...", text: $searchText)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .help("Search history by date or job name")
                 
                 Picker("Status", selection: $filterStatus) {
                     Text("All").tag(nil as SyncStatus?)
@@ -32,6 +47,7 @@ struct JobHistoryView: View {
                     Text("Error").tag(SyncStatus.error as SyncStatus?)
                 }
                 .frame(width: 120)
+                .help("Filter history by sync status")
             }
             .padding()
             .background(Color(nsColor: .controlBackgroundColor))
@@ -66,6 +82,24 @@ struct JobHistoryView: View {
             }
         }
         .listStyle(.plain)
+    }
+    
+    private func exportHistory() {
+        let results = appState.logStore.results(for: job.id)
+        let csv = appState.logStore.exportToCSV(results: results)
+        
+        let panel = NSSavePanel()
+        panel.title = "Export History"
+        panel.nameFieldStringValue = "\(job.name.replacingOccurrences(of: "/", with: "-"))-history.csv"
+        panel.allowedContentTypes = [.commaSeparatedText]
+        
+        if panel.runModal() == .OK, let url = panel.url {
+            do {
+                try csv.write(to: url, atomically: true, encoding: .utf8)
+            } catch {
+                print("Export failed: \(error)")
+            }
+        }
     }
 }
 

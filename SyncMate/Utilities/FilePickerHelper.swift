@@ -7,28 +7,9 @@ import UniformTypeIdentifiers
 /// Helper for selecting folders via NSOpenPanel
 struct FilePickerHelper {
     /// Open a folder selection panel
-    /// - Parameter title: The title for the panel
-    /// - Returns: The selected folder URL, or nil if cancelled
-    static func selectFolder(title: String = "Select Folder") -> URL? {
-        let panel = NSOpenPanel()
-        panel.title = title
-        panel.canChooseFiles = false
-        panel.canChooseDirectories = true
-        panel.allowsMultipleSelection = false
-        panel.canCreateDirectories = true
-        panel.prompt = "Select"
-        
-        if panel.runModal() == .OK {
-            return panel.url
-        }
-        
-        return nil
-    }
-    
-    /// Open a folder selection panel with validation
     /// - Parameters:
     ///   - title: The title for the panel
-    ///   - mustExist: Whether the folder must already exist
+    ///   - mustExist: Whether the folder must already exist (default: true)
     /// - Returns: The selected folder URL, or nil if cancelled
     static func selectFolder(title: String = "Select Folder", mustExist: Bool = true) -> URL? {
         let panel = NSOpenPanel()

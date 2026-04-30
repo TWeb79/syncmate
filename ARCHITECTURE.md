@@ -100,3 +100,24 @@ SyncEngine.runSync(job)  [async, @MainActor]
 - SyncEngine operations run asynchronously but publish all state changes on the main actor.
 - Process pipes use background threads for I/O, then dispatch to main via Task { @MainActor }.
 - Timer callbacks dispatch to main actor before updating progress.
+
+## Recent Changes
+
+### Live Progress Tracking
+- `JobOverviewView` now displays live progress during sync operations:
+  - Elapsed time counter updating every second
+  - Files transferred count from `syncEngine.progress`
+  - Total bytes sent with formatted output
+- Timer is managed via `@State private var timer: Timer?` and lifecycle methods
+
+### Path Validation
+- `JobSettingsView` validates source and destination paths on appear
+- Shows inline warning labels when paths don't exist or aren't directories
+- Uses `FilePickerHelper.isValidDirectory()` for validation
+
+### UI Improvements
+- Added `.help()` tooltips to all toolbar buttons and toggles
+- `JobLogView`: Search, auto-scroll toggle, export, and clear buttons have tooltips
+- `JobHistoryView`: Search field and status picker have tooltips
+- `JobScheduleView`: Add schedule button has tooltip
+- `JobOverviewView`: Run Now button has tooltip

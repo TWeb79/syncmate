@@ -3,7 +3,7 @@ import Foundation
 // Author = "Inventions4All - github:TWeb79"
 
 /// Represents a schedule for automated sync execution
-struct SyncSchedule: Identifiable, Codable, Equatable {
+struct SyncSchedule: Identifiable, Codable, Equatable, Hashable {
     var id: UUID
     var isEnabled: Bool
     var scheduleType: ScheduleType

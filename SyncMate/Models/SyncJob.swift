@@ -3,7 +3,7 @@ import Foundation
 // Author = "Inventions4All - github:TWeb79"
 
 /// Represents a synchronization job configuration
-struct SyncJob: Identifiable, Codable, Equatable {
+struct SyncJob: Identifiable, Codable, Equatable, Hashable {
     var id: UUID
     var name: String
     var sourcePath: String
@@ -60,6 +60,18 @@ extension SyncJob {
         self.lastRunAt = result.endTime ?? Date()
         // Also store in LogStore
         LogStore.shared.addResult(result)
+    }
+    
+    /// Bindable string for include patterns (newline-separated)
+    var includePatternsString: String {
+        get { includePatterns.joined(separator: "\n") }
+        set { includePatterns = newValue.split(separator: "\n").map(String.init) }
+    }
+    
+    /// Bindable string for exclude patterns (newline-separated)
+    var excludePatternsString: String {
+        get { excludePatterns.joined(separator: "\n") }
+        set { excludePatterns = newValue.split(separator: "\n").map(String.init) }
     }
 }
 

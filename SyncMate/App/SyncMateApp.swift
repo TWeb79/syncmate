@@ -20,6 +20,7 @@ struct SyncMateApp: App {
                     appState.addJob()
                 }
                 .keyboardShortcut("n", modifiers: .command)
+                .help("Create a new sync job (⌘N)")
             }
             
             CommandGroup(after: .sidebar) {
@@ -29,6 +30,7 @@ struct SyncMateApp: App {
                     }
                 }
                 .keyboardShortcut("r", modifiers: .command)
+                .help("Run the selected job (⌘R)")
             }
         }
         
@@ -65,26 +67,6 @@ struct ContentView: View {
             }
         }
         .navigationSplitViewStyle(.balanced)
-        .toolbar {
-            ToolbarItemGroup(placement: .primaryAction) {
-                Button(action: { appState.addJob() }) {
-                    Label("Add Job", systemImage: "plus")
-                }
-                
-                Button(action: {
-                    if let job = appState.selectedJob {
-                        appState.runJob(job)
-                    }
-                }) {
-                    Label("Run Now", systemImage: "play.fill")
-                }
-                .disabled(appState.selectedJob == nil || appState.isRunning)
-                
-                Button(action: { NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil) }) {
-                    Label("Settings", systemImage: "gear")
-                }
-            }
-        }
     }
 }
 
@@ -129,10 +111,18 @@ struct JobDetailView: View {
         .navigationTitle(job.name)
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {
-                Button(action: { appState.runJob(job) }) {
-                    Label("Run Now", systemImage: "play.fill")
+                if appState.isRunning {
+                    Button(action: { appState.syncEngine.cancelSync() }) {
+                        Label("Cancel", systemImage: "xmark")
+                    }
+                    .help("Cancel the current sync")
+                } else {
+                    Button(action: { appState.runJob(job) }) {
+                        Label("Run Now", systemImage: "play.fill")
+                    }
+                    .help("Run this sync job now")
+                    .disabled(appState.isRunning)
                 }
-                .disabled(appState.isRunning)
             }
         }
     }

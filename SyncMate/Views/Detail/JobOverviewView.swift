@@ -6,11 +6,16 @@ import SwiftUI
 struct JobOverviewView: View {
     @EnvironmentObject var appState: AppState
     let job: SyncJob
-    @State private var isRunning = false
     @State private var showingLog = false
+    @State private var elapsedTime: TimeInterval = 0
+    @State private var timer: Timer? = nil
     
     private var lastResult: SyncRunResult? {
         appState.logStore.lastResult(for: job.id)
+    }
+    
+    private var isRunningThisJob: Bool {
+        appState.isRunning && appState.selectedJob?.id == job.id
     }
     
     var body: some View {
@@ -26,6 +31,11 @@ struct JobOverviewView: View {
                     }
                     Spacer()
                     runButton
+                }
+                
+                // Live progress section (when running)
+                if isRunningThisJob {
+                    liveProgressSection
                 }
                 
                 // Quick stats
@@ -47,24 +57,71 @@ struct JobOverviewView: View {
         .sheet(isPresented: $showingLog) {
             JobLogView(syncEngine: appState.syncEngine)
         }
+        .onAppear {
+            startTimerIfNeeded()
+        }
+        .onDisappear {
+            stopTimer()
+        }
+        .onChange(of: appState.isRunning) { _, _ in
+            startTimerIfNeeded()
+        }
     }
     
     private var runButton: some View {
         Button(action: runSync) {
             HStack {
-                if isRunning {
+                if isRunningThisJob {
                     ProgressView()
                         .scaleEffect(0.8)
                         .padding(.trailing, 4)
                 } else {
                     Image(systemName: "play.fill")
                 }
-                Text(isRunning ? "Running..." : "Run Now")
+                Text(isRunningThisJob ? "Running..." : "Run Now")
             }
         }
         .buttonStyle(.borderedProminent)
         .controlSize(.large)
         .disabled(appState.isRunning)
+        .help("Run this sync job now")
+    }
+    
+    private var liveProgressSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Live Progress")
+                    .font(.headline)
+                Spacer()
+                Text(formattedElapsedTime)
+                    .font(.system(.body, design: .monospaced))
+                    .foregroundColor(.secondary)
+            }
+            
+            HStack(spacing: 24) {
+                VStack(alignment: .leading) {
+                    Text("Files Transferred")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Text("\(appState.syncEngine.progress.filesTransferred)")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.accentColor)
+                }
+                
+                VStack(alignment: .leading) {
+                    Text("Bytes Sent")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Text(formatBytes(appState.syncEngine.progress.totalBytes))
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                }
+            }
+        }
+        .padding()
+        .background(Color.accentColor.opacity(0.1))
+        .cornerRadius(10)
     }
     
     private func runSync() {
@@ -207,5 +264,42 @@ struct JobOverviewView: View {
         case .twoWaySync:
             return "Bidirectional sync"
         }
+    }
+    
+    // MARK: - Timer & Formatting Helpers
+    
+    private func startTimerIfNeeded() {
+        stopTimer()
+        if isRunningThisJob {
+            elapsedTime = 0
+            timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+                elapsedTime += 1
+            }
+        }
+    }
+    
+    private func stopTimer() {
+        timer?.invalidate()
+        timer = nil
+    }
+    
+    private var formattedElapsedTime: String {
+        let totalSeconds = Int(elapsedTime)
+        let hours = totalSeconds / 3600
+        let minutes = (totalSeconds % 3600) / 60
+        let seconds = totalSeconds % 60
+        
+        if hours > 0 {
+            return String(format: "%d:%02d:%02d", hours, minutes, seconds)
+        } else {
+            return String(format: "%02d:%02d", minutes, seconds)
+        }
+    }
+    
+    private func formatBytes(_ bytes: Int64) -> String {
+        let formatter = ByteCountFormatter()
+        formatter.allowedUnits = [.useBytes, .useKB, .useMB, .useGB]
+        formatter.countStyle = .file
+        return formatter.string(fromByteCount: bytes)
     }
 }

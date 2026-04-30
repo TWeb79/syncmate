@@ -4,6 +4,7 @@ import Combine
 // Author = "Inventions4All - github:TWeb79"
 
 /// Global application state managing sync jobs and engine
+@MainActor
 class AppState: ObservableObject {
     @Published var jobs: [SyncJob] = []
     @Published var selectedJob: SyncJob?
@@ -54,22 +55,49 @@ class AppState: ObservableObject {
     func runJob(_ job: SyncJob) {
         guard !isRunning else { return }
         
-        Task { @MainActor in
-            let result = try await syncEngine.runSync(job: job)
-            
-            // Update job history
-            if let index = jobs.firstIndex(where: { $0.id == job.id }) {
-                jobs[index].addRunResult(result)
-                if selectedJob?.id == job.id {
-                    selectedJob = jobs[index]
-                }
-            }
-            
-            saveJobs()
-            
-            // Send notification
-            notificationService.sendSyncNotification(for: job, result: result)
-        }
+         Task { @MainActor in
+             do {
+                 let result = try await syncEngine.runSync(job: job, rsyncPath: rsyncPath)
+                 
+                 // Update job history
+                 if let index = jobs.firstIndex(where: { $0.id == job.id }) {
+                     jobs[index].addRunResult(result)
+                     if selectedJob?.id == job.id {
+                         selectedJob = jobs[index]
+                     }
+                 }
+                 
+                 saveJobs()
+                 
+                 // Send notification
+                 notificationService.sendSyncNotification(for: job, result: result)
+             } catch {
+                 // Update job history with error
+                 if let index = jobs.firstIndex(where: { $0.id == job.id }) {
+                     jobs[index].lastRunResult = .error
+                     jobs[index].lastRunAt = Date()
+                     if selectedJob?.id == job.id {
+                         selectedJob = jobs[index]
+                     }
+                 }
+                 saveJobs()
+                 
+                 // Send error notification
+                 notificationService.sendSyncNotification(for: job, result: SyncRunResult(
+                     id: UUID(),
+                     jobId: job.id,
+                     jobName: job.name,
+                     startTime: Date(),
+                     endTime: Date(),
+                     status: .error,
+                     filesTransferred: 0,
+                     filesSkipped: 0,
+                     totalSize: 0,
+                     errorMessage: error.localizedDescription,
+                     logOutput: ""
+                 ))
+             }
+         }
     }
     
     // MARK: - Persistence

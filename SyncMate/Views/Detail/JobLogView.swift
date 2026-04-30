@@ -21,17 +21,21 @@ struct JobLogView: View {
             HStack {
                 TextField("Search logs...", text: $searchText)
                     .textFieldStyle(.plain)
+                    .help("Filter log lines by search text")
                 
                 Toggle("Auto-scroll", isOn: $autoScroll)
                     .toggleStyle(.switch)
+                    .help("Automatically scroll to new log output")
                 
                 Button(action: exportLogs) {
                     Label("Export", systemImage: "square.and.arrow.up")
                 }
+                .help("Export logs to a text file")
                 
                 Button(action: { syncEngine.logLines.removeAll() }) {
                     Label("Clear", systemImage: "trash")
                 }
+                .help("Clear all log output")
             }
             .padding(8)
             .background(Color(nsColor: .controlBackgroundColor))

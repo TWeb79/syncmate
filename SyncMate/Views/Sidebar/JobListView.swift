@@ -7,6 +7,8 @@ struct JobListView: View {
     @EnvironmentObject var appState: AppState
     @State private var showingAddJob = false
     @State private var newJobName = ""
+    @State private var showingDeleteAlert = false
+    @State private var jobToDelete: SyncJob?
     
     var body: some View {
         VStack(spacing: 0) {
@@ -37,9 +39,20 @@ struct JobListView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-                List(appState.jobs) { job in
-                    JobRowView(job: job)
-                        .tag(job.id)
+                List(selection: $appState.selectedJob) {
+                    ForEach(appState.jobs) { job in
+                        JobRowView(job: job)
+                            .tag(job.id)
+                            .contextMenu {
+                                Button(role: .destructive) {
+                                    jobToDelete = job
+                                    showingDeleteAlert = true
+                                } label: {
+                                    Label("Delete Job", systemImage: "trash")
+                                }
+                            }
+                    }
+                    .onDelete(perform: deleteJobs)
                 }
                 .listStyle(.sidebar)
             }
@@ -64,6 +77,23 @@ struct JobListView: View {
         } message: {
             Text("Enter a name for your new sync job")
         }
+        .alert("Delete Job?", isPresented: $showingDeleteAlert) {
+            Button("Cancel", role: .cancel) {}
+            Button("Delete", role: .destructive) {
+                if let job = jobToDelete {
+                    appState.deleteJob(job)
+                }
+            }
+        } message: {
+            if let job = jobToDelete {
+                Text("Delete '\(job.name)'? This cannot be undone.")
+            }
+        }
+        .onChange(of: showingDeleteAlert) { _, _ in
+            if !showingDeleteAlert {
+                jobToDelete = nil
+            }
+        }
     }
     
     private func createJob() {
@@ -73,6 +103,13 @@ struct JobListView: View {
         appState.selectedJob = job
         appState.saveJobs()
         newJobName = ""
+    }
+    
+    private func deleteJobs(at offsets: IndexSet) {
+        for index in offsets {
+            let job = appState.jobs[index]
+            appState.deleteJob(job)
+        }
     }
 }
 
@@ -95,15 +132,20 @@ struct JobRowView: View {
                     .fontWeight(.medium)
                 
                 HStack(spacing: 4) {
-                    Text("One-Way Copy")
+                    Text(job.syncMode.rawValue)
                         .font(.caption)
                         .foregroundColor(.secondary)
                     
-                    if let lastRun = job.lastRunResult {
-                        Text("•")
+                    Text("•")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
+                    if let lastRun = job.lastRunAt {
+                        Text(timeAgo(date: lastRun))
                             .font(.caption)
                             .foregroundColor(.secondary)
-                        Text(lastRun.rawValue)
+                    } else {
+                        Text("Never run")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
@@ -114,6 +156,12 @@ struct JobRowView: View {
         }
         .padding(.vertical, 4)
         .contentShape(Rectangle())
+    }
+    
+    private func timeAgo(date: Date) -> String {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .full
+        return formatter.localizedString(for: date, relativeTo: Date())
     }
 }
 
