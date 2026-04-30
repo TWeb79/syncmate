@@ -1,6 +1,8 @@
 import Foundation
 import UserNotifications
 
+// Author = "Inventions4All - github:TWeb79"
+
 /// Service responsible for sending notifications
 class NotificationService: NSObject, ObservableObject, UNUserNotificationCenterDelegate {
     /// Shared instance

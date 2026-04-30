@@ -1,5 +1,7 @@
 import Foundation
 
+// Author = "Inventions4All - github:TWeb79"
+
 /// Represents a schedule for automated sync execution
 struct SyncSchedule: Identifiable, Codable, Equatable {
     var id: UUID

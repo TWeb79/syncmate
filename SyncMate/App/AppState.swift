@@ -1,6 +1,8 @@
 import SwiftUI
 import Combine
 
+// Author = "Inventions4All - github:TWeb79"
+
 /// Global application state managing sync jobs and engine
 class AppState: ObservableObject {
     @Published var jobs: [SyncJob] = []
@@ -17,22 +19,18 @@ class AppState: ObservableObject {
     
     init() {
         loadJobs()
-        syncEngine = DispatchQueue.main.sync {
-            SyncEngine()
-        }
+        syncEngine = SyncEngine()
         setupBindings()
     }
     
     private func setupBindings() {
         // Listen for sync completion
-        Task { @MainActor in
-            syncEngine.$isRunning
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] running in
-                    self?.isRunning = running
-                }
-                .store(in: &cancellables)
-        }
+        syncEngine.$isRunning
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] running in
+                self?.isRunning = running
+            }
+            .store(in: &cancellables)
     }
     
     // MARK: - Job Management

@@ -1,5 +1,7 @@
 import SwiftUI
 
+// Author = "Inventions4All - github:TWeb79"
+
 /// Empty state view with illustration and call-to-action
 struct EmptyStateView: View {
     let title: String

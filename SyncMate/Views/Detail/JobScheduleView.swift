@@ -1,5 +1,7 @@
 import SwiftUI
 
+// Author = "Inventions4All - github:TWeb79"
+
 /// Schedule tab for configuring sync job schedules
 struct JobScheduleView: View {
     @ObservedObject var appState: AppState

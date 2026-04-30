@@ -1,5 +1,7 @@
 import Foundation
 
+// Author = "Inventions4All - github:TWeb79"
+
 /// Service responsible for storing and retrieving sync run history
 class LogStore: ObservableObject {
     /// Shared instance

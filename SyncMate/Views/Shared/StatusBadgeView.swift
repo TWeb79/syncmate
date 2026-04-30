@@ -1,5 +1,7 @@
 import SwiftUI
 
+// Author = "Inventions4All - github:TWeb79"
+
 /// A view that displays a status badge with a colored dot
 struct StatusBadgeView: View {
     let status: SyncStatus

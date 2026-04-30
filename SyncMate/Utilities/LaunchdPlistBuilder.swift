@@ -1,5 +1,7 @@
 import Foundation
 
+// Author = "Inventions4All - github:TWeb79"
+
 /// Builder for creating launchd plist files
 struct LaunchdPlistBuilder {
     /// Build a launchd plist for a sync job schedule

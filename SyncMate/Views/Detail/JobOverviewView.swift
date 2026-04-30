@@ -1,5 +1,7 @@
 import SwiftUI
 
+// Author = "Inventions4All - github:TWeb79"
+
 /// Overview tab showing sync job summary and quick actions
 struct JobOverviewView: View {
     @EnvironmentObject var appState: AppState

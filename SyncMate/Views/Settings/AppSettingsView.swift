@@ -1,5 +1,7 @@
 import SwiftUI
 
+// Author = "Inventions4All - github:TWeb79"
+
 /// App-level settings view
 struct AppSettingsView: View {
     @EnvironmentObject var appState: AppState

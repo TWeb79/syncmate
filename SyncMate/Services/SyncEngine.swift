@@ -1,8 +1,9 @@
 import Foundation
 import Combine
 
+// Author = "Inventions4All - github:TWeb79"
+
 /// Service responsible for executing sync operations using rsync
-@MainActor
 class SyncEngine: ObservableObject {
     /// Currently running process
     private var currentProcess: Process?

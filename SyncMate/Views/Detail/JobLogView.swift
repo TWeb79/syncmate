@@ -1,5 +1,7 @@
 import SwiftUI
 
+// Author = "Inventions4All - github:TWeb79"
+
 /// Log tab showing real-time sync output
 struct JobLogView: View {
     @ObservedObject var syncEngine: SyncEngine

@@ -1,5 +1,7 @@
 import Foundation
 
+// Author = "Inventions4All - github:TWeb79"
+
 /// Service responsible for managing scheduled sync jobs via launchd
 class SchedulerService {
     /// Shared instance

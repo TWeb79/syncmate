@@ -1,5 +1,7 @@
 import SwiftUI
 
+// Author = "Inventions4All - github:TWeb79"
+
 /// History tab showing past sync run results
 struct JobHistoryView: View {
     let job: SyncJob

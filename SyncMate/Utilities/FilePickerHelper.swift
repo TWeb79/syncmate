@@ -2,6 +2,8 @@ import Foundation
 import AppKit
 import UniformTypeIdentifiers
 
+// Author = "Inventions4All - github:TWeb79"
+
 /// Helper for selecting folders via NSOpenPanel
 struct FilePickerHelper {
     /// Open a folder selection panel

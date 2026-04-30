@@ -1,5 +1,7 @@
 import Foundation
 
+// Author = "Inventions4All - github:TWeb79"
+
 /// Represents the result of a sync run
 struct SyncRunResult: Identifiable, Codable, Equatable {
     var id: UUID

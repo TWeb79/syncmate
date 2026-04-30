@@ -1,5 +1,7 @@
 import Foundation
 
+// Author = "Inventions4All - github:TWeb79"
+
 /// Represents a synchronization job configuration
 struct SyncJob: Identifiable, Codable, Equatable {
     var id: UUID

@@ -1,5 +1,7 @@
 import SwiftUI
 
+// Author = "Inventions4All - github:TWeb79"
+
 /// Sidebar view displaying the list of sync jobs
 struct JobListView: View {
     @EnvironmentObject var appState: AppState

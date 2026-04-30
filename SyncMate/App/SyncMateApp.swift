@@ -1,5 +1,7 @@
 import SwiftUI
 
+// Author = "Inventions4All - github:TWeb79"
+
 /// Main application entry point
 @main
 struct SyncMateApp: App {
