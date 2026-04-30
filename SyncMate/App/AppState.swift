@@ -25,12 +25,14 @@ class AppState: ObservableObject {
     
     private func setupBindings() {
         // Listen for sync completion
-        syncEngine.$isRunning
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] running in
-                self?.isRunning = running
-            }
-            .store(in: &cancellables)
+        Task { @MainActor in
+            syncEngine.$isRunning
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] running in
+                    self?.isRunning = running
+                }
+                .store(in: &cancellables)
+        }
     }
     
     // MARK: - Job Management
@@ -43,7 +45,7 @@ class AppState: ObservableObject {
     }
     
     func deleteJob(_ job: SyncJob) {
-        schedulerService.removeSchedules(for: job.id)
+        try? schedulerService.removeSchedules(for: job.id)
         jobs.removeAll { $0.id == job.id }
         if selectedJob?.id == job.id {
             selectedJob = jobs.first
@@ -55,7 +57,7 @@ class AppState: ObservableObject {
         guard !isRunning else { return }
         
         Task { @MainActor in
-            let result = await syncEngine.runSync(job: job)
+            let result = try await syncEngine.runSync(job: job)
             
             // Update job history
             if let index = jobs.firstIndex(where: { $0.id == job.id }) {
@@ -68,7 +70,7 @@ class AppState: ObservableObject {
             saveJobs()
             
             // Send notification
-            await notificationService.sendSyncNotification(for: job, result: result)
+            notificationService.sendSyncNotification(for: job, result: result)
         }
     }
     

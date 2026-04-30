@@ -144,7 +144,7 @@ struct AdvancedSettingsView: View {
         Form {
             Section {
                 Button("Clear All Logs") {
-                    appState.logStore.clearAllLogs()
+                    appState.logStore.clearAllResults()
                 }
                 .foregroundColor(.red)
                 

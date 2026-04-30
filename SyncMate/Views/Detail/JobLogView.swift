@@ -18,7 +18,7 @@ struct JobLogView: View {
             // Toolbar
             HStack {
                 TextField("Search logs...", text: $searchText)
-                    .textFieldStyle(.searchField)
+                    .textFieldStyle(.plain)
                 
                 Toggle("Auto-scroll", isOn: $autoScroll)
                     .toggleStyle(.switch)

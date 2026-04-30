@@ -3,14 +3,15 @@ import SwiftUI
 /// History tab showing past sync run results
 struct JobHistoryView: View {
     let job: SyncJob
+    @EnvironmentObject var appState: AppState
     @State private var filterStatus: SyncStatus? = nil
     @State private var searchText = ""
     
     var filteredHistory: [SyncRunResult] {
-        job.runHistory.filter { result in
+        appState.logStore.results(for: job.id).filter { result in
             let matchesStatus = filterStatus == nil || result.status == filterStatus
-            let matchesSearch = searchText.isEmpty || 
-                result.formattedDate.localizedCaseInsensitiveContains(searchText)
+            let matchesSearch = searchText.isEmpty ||
+                result.startTimeString.localizedCaseInsensitiveContains(searchText)
             return matchesStatus && matchesSearch
         }
     }
@@ -20,7 +21,7 @@ struct JobHistoryView: View {
             // Filter bar
             HStack {
                 TextField("Search history...", text: $searchText)
-                    .textFieldStyle(.searchField)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
                 
                 Picker("Status", selection: $filterStatus) {
                     Text("All").tag(nil as SyncStatus?)
@@ -62,7 +63,7 @@ struct JobHistoryView: View {
                 HistoryRowView(result: result)
             }
         }
-        .listStyle(.inset)
+        .listStyle(.plain)
     }
 }
 
@@ -77,9 +78,9 @@ struct HistoryRowView: View {
                 Image(systemName: statusIcon)
                     .foregroundColor(statusColor)
                 VStack(alignment: .leading) {
-                    Text(result.formattedDate)
+                    Text(result.startTimeString)
                         .fontWeight(.medium)
-                    Text("\(result.filesSynced) files • \(result.formattedDuration)")
+                    Text("\(result.filesTransferred) files • \(result.durationString)")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
@@ -92,13 +93,13 @@ struct HistoryRowView: View {
             
             if isExpanded {
                 VStack(alignment: .leading, spacing: 4) {
-                    detailRow("Files Synced", "\(result.filesSynced)")
+                    detailRow("Files Transferred", "\(result.filesTransferred)")
                     detailRow("Files Skipped", "\(result.filesSkipped)")
-                    detailRow("Total Size", ByteCountFormatter.string(fromByteCount: result.totalBytes, countStyle: .file))
-                    detailRow("Duration", result.formattedDuration)
-                    detailRow("Status", result.status.displayName)
-                    if !result.errorMessage.isEmpty {
-                        Text("Error: \(result.errorMessage)")
+                    detailRow("Total Size", ByteCountFormatter.string(fromByteCount: result.totalSize, countStyle: .file))
+                    detailRow("Duration", result.durationString)
+                    detailRow("Status", result.status.rawValue)
+                    if let error = result.errorMessage, !error.isEmpty {
+                        Text("Error: \(error)")
                             .font(.caption)
                             .foregroundColor(.red)
                     }
@@ -125,6 +126,8 @@ struct HistoryRowView: View {
         case .success: return "checkmark.circle.fill"
         case .warning: return "exclamationmark.triangle.fill"
         case .error: return "xmark.circle.fill"
+        case .running: return "arrow.triangle.2.circlepath"
+        case .idle: return "circle"
         }
     }
     
@@ -133,10 +136,13 @@ struct HistoryRowView: View {
         case .success: return .green
         case .warning: return .orange
         case .error: return .red
+        case .running: return .blue
+        case .idle: return .gray
         }
     }
 }
 
 #Preview {
     JobHistoryView(job: SyncJob(name: "Test"))
+        .environmentObject(AppState())
 }

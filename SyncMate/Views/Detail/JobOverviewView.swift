@@ -2,10 +2,14 @@ import SwiftUI
 
 /// Overview tab showing sync job summary and quick actions
 struct JobOverviewView: View {
-    @ObservedObject var appState: AppState
+    @EnvironmentObject var appState: AppState
     let job: SyncJob
     @State private var isRunning = false
     @State private var showingLog = false
+    
+    private var lastResult: SyncRunResult? {
+        appState.logStore.lastResult(for: job.id)
+    }
     
     var body: some View {
         ScrollView {
@@ -16,15 +20,15 @@ struct JobOverviewView: View {
                         Text(job.name)
                             .font(.title)
                             .fontWeight(.bold)
-                        StatusBadgeView(status: job.status)
+                        StatusBadgeView(status: job.lastRunResult ?? .idle)
                     }
                     Spacer()
                     runButton
                 }
                 
                 // Quick stats
-                if let lastResult = job.lastRunResult {
-                    statsSection(lastResult: lastResult)
+                if let result = lastResult {
+                    statsSection(lastResult: result)
                 }
                 
                 // Source and destination
@@ -39,7 +43,7 @@ struct JobOverviewView: View {
             .padding()
         }
         .sheet(isPresented: $showingLog) {
-            JobLogView(job: job, appState: appState)
+            JobLogView(syncEngine: appState.syncEngine)
         }
     }
     
@@ -58,183 +62,148 @@ struct JobOverviewView: View {
         }
         .buttonStyle(.borderedProminent)
         .controlSize(.large)
-        .disabled(isRunning || job.status == .running)
+        .disabled(appState.isRunning)
+    }
+    
+    private func runSync() {
+        appState.runJob(job)
     }
     
     private func statsSection(lastResult: SyncRunResult) -> some View {
-        Section {
-            HStack(spacing: 20) {
-                StatCard(
-                    title: "Files Synced",
-                    value: "\(lastResult.filesSynced)",
-                    icon: "doc.on.doc"
-                )
-                StatCard(
-                    title: "Total Size",
-                    value: ByteCountFormatter.string(fromByteCount: lastResult.totalBytes, countStyle: .file),
-                    icon: "externaldrive"
-                )
-                StatCard(
-                    title: "Duration",
-                    value: lastResult.formattedDuration,
-                    icon: "clock"
-                )
-                StatCard(
-                    title: "Status",
-                    value: lastResult.status.displayName,
-                    icon: lastResult.status == .success ? "checkmark.circle" : 
-                           lastResult.status == .warning ? "exclamationmark.triangle" : "xmark.circle"
-                )
-            }
-        } header: {
+        VStack(alignment: .leading, spacing: 12) {
             Text("Last Run Summary")
                 .font(.headline)
+            
+            HStack(spacing: 24) {
+                VStack(alignment: .leading) {
+                    Text("Duration")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Text(lastResult.durationString)
+                        .font(.body)
+                }
+                
+                VStack(alignment: .leading) {
+                    Text("Files Transferred")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Text("\(lastResult.filesTransferred)")
+                        .font(.body)
+                }
+                
+                VStack(alignment: .leading) {
+                    Text("Files Skipped")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Text("\(lastResult.filesSkipped)")
+                        .font(.body)
+                }
+            }
         }
+        .padding()
+        .background(Color(nsColor: .controlBackgroundColor))
+        .cornerRadius(10)
     }
     
     private var foldersSection: some View {
-        Section {
-            VStack(spacing: 12) {
-                FolderPathRow(title: "Source", path: job.sourcePath, icon: "folder")
-                FolderPathRow(title: "Destination", path: job.destinationPath, icon: "arrow.right.circle")
-            }
-        } header: {
+        VStack(alignment: .leading, spacing: 12) {
             Text("Folders")
                 .font(.headline)
+            
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Image(systemName: "folder")
+                        .foregroundColor(.blue)
+                    Text(job.sourcePath.isEmpty ? "Not set" : job.sourcePath)
+                        .lineLimit(1)
+                }
+                
+                HStack {
+                    Image(systemName: "arrow.right")
+                        .foregroundColor(.gray)
+                }
+                
+                HStack {
+                    Image(systemName: "folder")
+                        .foregroundColor(.green)
+                    Text(job.destinationPath.isEmpty ? "Not set" : job.destinationPath)
+                        .lineLimit(1)
+                }
+            }
+            .padding()
+            .background(Color(nsColor: .controlBackgroundColor))
+            .cornerRadius(10)
         }
     }
     
     private var syncModeSection: some View {
-        Section {
-            VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    Image(systemName: job.syncMode.icon)
-                        .foregroundColor(.accentColor)
-                    Text(job.syncMode.displayName)
-                        .fontWeight(.medium)
-                }
-                Text(job.syncMode.description)
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Sync Mode")
+                .font(.headline)
+            
+            HStack(spacing: 12) {
+                Image(systemName: syncModeIcon)
+                    .font(.title)
+                Text(job.syncMode.rawValue)
+                    .font(.body)
+                Text("-")
+                Text(syncModeDescription)
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
             .padding()
-            .frame(maxWidth: .infinity, alignment: .leading)
             .background(Color(nsColor: .controlBackgroundColor))
-            .cornerRadius(8)
-        } header: {
-            Text("Sync Mode")
-                .font(.headline)
+            .cornerRadius(10)
         }
     }
     
     private var recentActivitySection: some View {
-        Section {
-            if job.runHistory.isEmpty {
-                Text("No recent activity")
-                    .foregroundColor(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding()
-            } else {
-                VStack(spacing: 8) {
-                    ForEach(job.runHistory.prefix(5)) { result in
-                        HStack {
-                            Image(systemName: result.status == .success ? "checkmark.circle.fill" :
-                                  result.status == .warning ? "exclamationmark.triangle.fill" : "xmark.circle.fill")
-                                .foregroundColor(result.status == .success ? .green :
-                                                result.status == .warning ? .orange : .red)
-                            VStack(alignment: .leading) {
-                                Text(result.formattedDate)
-                                    .font(.caption)
-                                Text("\(result.filesSynced) files • \(result.formattedDuration)")
-                                    .font(.caption2)
-                                    .foregroundColor(.secondary)
-                            }
-                            Spacer()
-                        }
-                        .padding(.vertical, 4)
-                    }
-                }
-            }
-            
-            Button("View Full History") {
-                showingLog = true
-            }
-            .buttonStyle(.link)
-        } header: {
+        VStack(alignment: .leading, spacing: 12) {
             Text("Recent Activity")
                 .font(.headline)
-        }
-    }
-    
-    private func runSync() {
-        isRunning = true
-        Task {
-            await SyncEngine.shared.runSync(job: job) { result in
-                DispatchQueue.main.async {
-                    isRunning = false
-                    if let result = result {
-                        appState.updateJobResult(jobId: job.id, result: result)
+            
+            if appState.logStore.runResults.isEmpty {
+                Text("No recent sync activity")
+                    .foregroundColor(.secondary)
+            } else {
+                VStack(alignment: .leading, spacing: 8) {
+                    ForEach(appState.logStore.runResults.prefix(5)) { result in
+                        if result.jobId == job.id {
+                            HStack {
+                                StatusBadgeView(status: result.status)
+                                Text(result.jobName)
+                                    .font(.subheadline)
+                                Spacer()
+                                Text(result.durationString)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(8)
+                            .background(Color(nsColor: .controlBackgroundColor))
+                            .cornerRadius(6)
+                        }
                     }
                 }
             }
         }
     }
-}
-
-/// Card view for displaying a statistic
-struct StatCard: View {
-    let title: String
-    let value: String
-    let icon: String
     
-    var body: some View {
-        VStack(spacing: 8) {
-            Image(systemName: icon)
-                .font(.title2)
-                .foregroundColor(.accentColor)
-            Text(value)
-                .font(.title3)
-                .fontWeight(.semibold)
-            Text(title)
-                .font(.caption)
-                .foregroundColor(.secondary)
+    private var syncModeIcon: String {
+        switch job.syncMode {
+        case .mirror: return "arrow.left.arrow.right"
+        case .oneWayCopy: return "arrow.right"
+        case .twoWaySync: return "arrow.left.arrow.right.circle"
         }
-        .frame(maxWidth: .infinity)
-        .padding()
-        .background(Color(nsColor: .controlBackgroundColor))
-        .cornerRadius(8)
     }
-}
-
-/// Row showing a folder path
-struct FolderPathRow: View {
-    let title: String
-    let path: String
-    let icon: String
     
-    var body: some View {
-        HStack {
-            Image(systemName: icon)
-                .foregroundColor(.accentColor)
-                .frame(width: 24)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                Text(path.isEmpty ? "Not set" : path)
-                    .font(.body)
-                    .foregroundColor(path.isEmpty ? .secondary : .primary)
-                    .lineLimit(1)
-                    .truncationMode(.middle)
-            }
-            Spacer()
+    private var syncModeDescription: String {
+        switch job.syncMode {
+        case .mirror:
+            return "Destination matches source exactly"
+        case .oneWayCopy:
+            return "Copy new/changed files"
+        case .twoWaySync:
+            return "Bidirectional sync"
         }
-        .padding()
-        .background(Color(nsColor: .controlBackgroundColor))
-        .cornerRadius(8)
     }
-}
-
-#Preview {
-    JobOverviewView(appState: AppState(), job: SyncJob(name: "Test Job"))
 }

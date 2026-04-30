@@ -89,6 +89,32 @@ class NotificationService: NSObject, ObservableObject, UNUserNotificationCenterD
         UNUserNotificationCenter.current().add(request)
     }
     
+    /// Send a sync notification based on sync result
+    func sendSyncNotification(for job: SyncJob, result: SyncRunResult) {
+        let duration: String
+        if let endTime = result.endTime {
+            let totalSeconds = Int(endTime.timeIntervalSince(result.startTime))
+            let hours = totalSeconds / 3600
+            let minutes = (totalSeconds % 3600) / 60
+            let seconds = totalSeconds % 60
+            
+            if hours > 0 {
+                duration = String(format: "%d:%02d:%02d", hours, minutes, seconds)
+            } else {
+                duration = String(format: "%d:%02d", minutes, seconds)
+            }
+        } else {
+            duration = "0:00"
+        }
+        
+        sendSyncCompletedNotification(
+            jobName: job.name,
+            status: result.status,
+            filesTransferred: result.filesTransferred,
+            duration: duration
+        )
+    }
+    
     // MARK: - UNUserNotificationCenterDelegate
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {

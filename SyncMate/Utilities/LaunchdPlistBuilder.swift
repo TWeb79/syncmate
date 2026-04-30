@@ -15,38 +15,47 @@ struct LaunchdPlistBuilder {
         var plist: [String: Any] = [
             "Label": label,
             "ProgramArguments": [executablePath, "--run-job", job.id.uuidString],
-            "RunAtLoad": schedule.runAtLogin,
+            "RunAtLoad": schedule.triggerOnLogin,
             "Disabled": !schedule.isEnabled,
             "StandardOutPath": "/tmp/syncmate-\(job.id.uuidString).out.log",
             "StandardErrorPath": "/tmp/syncmate-\(job.id.uuidString).err.log"
         ]
         
+        // Add KeepAlive for wake triggers
+        if schedule.triggerOnWake {
+            plist["KeepAlive"] = ["SuccessfulExit": false]
+        }
+        
         // Add schedule-based triggers
         switch schedule.scheduleType {
         case .interval:
             // Run every N minutes
-            let intervalInSeconds = schedule.intervalMinutes * 60
+            let intervalMinutes = schedule.intervalMinutes ?? 60
+            let intervalInSeconds = intervalMinutes * 60
             plist["StartInterval"] = intervalInSeconds
             
         case .daily:
             // Run at specific time
+            guard let timeOfDay = schedule.timeOfDay else { break }
             var calendar = Calendar.current
             calendar.timeZone = TimeZone.current
-            var components = calendar.dateComponents([.hour, .minute], from: schedule.specificTime)
+            var components = calendar.dateComponents([.hour, .minute], from: timeOfDay)
             components.second = 0
             plist["StartCalendarInterval"] = components
             
         case .weekly:
             // Run on specific weekdays
+            guard !schedule.weekdays.isEmpty, let timeOfDay = schedule.timeOfDay else { break }
             var calendar = Calendar.current
             calendar.timeZone = TimeZone.current
-            var components = calendar.dateComponents([.hour, .minute], from: schedule.specificTime)
+            var components = calendar.dateComponents([.hour, .minute], from: timeOfDay)
             components.second = 0
-            components.weekday = schedule.weekdays.first?.rawValue ?? 1
+            // Use the first weekday as the representative (launchd will handle all via separate entries if needed)
+            components.weekday = schedule.weekdays.first?.calendarWeekday ?? 1
             plist["StartCalendarInterval"] = components
             
-        case .onLogin, .onWake:
-            // These are handled by RunAtLoad and other mechanisms
+        case .manual:
+            // No automatic scheduling - only run manually or via login/wake triggers
             break
         }
         
@@ -108,11 +117,11 @@ struct LaunchdPlistBuilder {
     /// Escape special XML characters
     private func escapeXML(_ string: String) -> String {
         return string
-            .replacingOccurrences(of: "&", with: "&")
-            .replacingOccurrences(of: "<", with: "<")
-            .replacingOccurrences(of: ">", with: ">")
+            .replacingOccurrences(of: "&", with: "&amp;")
+            .replacingOccurrences(of: "<", with: "&lt;")
+            .replacingOccurrences(of: ">", with: "&gt;")
             .replacingOccurrences(of: "\"", with: "&quot;")
-            .replacingOccurrences(of: "'", with: "'")
+            .replacingOccurrences(of: "'", with: "&apos;")
     }
     
     /// Parse a plist file

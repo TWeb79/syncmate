@@ -44,6 +44,22 @@ class SchedulerService {
         }
     }
     
+    /// Remove all launchd plists for a job
+    func removeSchedules(for jobId: UUID) throws {
+        let jobs = getAllJobs().filter { $0.contains("com.syncmate.\(jobId.uuidString)") }
+        for job in jobs {
+            let label = job.components(separatedBy: " ").first ?? ""
+            if !label.isEmpty {
+                let plistFileName = "\(label).plist"
+                let plistURL = URL(fileURLWithPath: launchAgentsPath).appendingPathComponent(plistFileName)
+                try? unloadJob(label: label)
+                if FileManager.default.fileExists(atPath: plistURL.path) {
+                    try FileManager.default.removeItem(at: plistURL)
+                }
+            }
+        }
+    }
+    
     /// Load a launchd job
     func loadJob(label: String) throws {
         let plistPath = "\(launchAgentsPath)/\(label).plist"

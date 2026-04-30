@@ -74,13 +74,13 @@ struct ScheduleRowView: View {
                 HStack {
                     Toggle("", isOn: $schedule.isEnabled)
                         .labelsHidden()
-                    Text(schedule.displayName)
+                    Text(schedule.scheduleType.rawValue)
                         .fontWeight(.medium)
                 }
                 Text(schedule.description)
                     .font(.caption)
                     .foregroundColor(.secondary)
-                if schedule.isEnabled, let nextRun = schedule.nextRunDate {
+                if schedule.isEnabled, let nextRun = schedule.nextRunTime() {
                     Text("Next: \(nextRun.formatted(date: .abbreviated, time: .shortened))")
                         .font(.caption2)
                         .foregroundColor(.accentColor)
@@ -98,17 +98,19 @@ struct ScheduleRowView: View {
         .cornerRadius(8)
         .onChange(of: schedule.isEnabled) { _, isEnabled in
             if isEnabled {
-                SchedulerService.shared.registerSchedule(schedule, for: job)
+                Task {
+                    try? await SchedulerService.shared.enableSchedule(for: job, schedule: schedule)
+                }
             } else {
-                SchedulerService.shared.unregisterSchedule(schedule, for: job)
+                try? SchedulerService.shared.disableSchedule(for: job, schedule: schedule)
             }
             appState.saveJobs()
         }
         .alert("Delete Schedule?", isPresented: $showingDeleteConfirmation) {
             Button("Cancel", role: .cancel) {}
             Button("Delete", role: .destructive) {
-                SchedulerService.shared.removeSchedule(schedule, for: job)
-                job.schedules.removeAll { $0.id == schedule.id }
+                try? SchedulerService.shared.disableSchedule(for: job, schedule: schedule)
+                schedule.isEnabled = false
                 appState.saveJobs()
             }
         } message: {
@@ -126,7 +128,7 @@ struct AddScheduleView: View {
     @State private var scheduleType: ScheduleType = .daily
     @State private var intervalMinutes: Int = 60
     @State private var dailyTime = Date()
-    @State private var selectedWeekdays: Set<Int> = []
+    @State private var selectedWeekdays: Set<Weekday> = []
     
     var body: some View {
         VStack(spacing: 20) {
@@ -147,6 +149,9 @@ struct AddScheduleView: View {
                     DatePicker("Time", selection: $dailyTime, displayedComponents: .hourAndMinute)
                 case .weekly:
                     WeekdayPicker(selectedDays: $selectedWeekdays)
+                case .manual:
+                    Text("Manual schedules cannot be created here")
+                        .foregroundColor(.secondary)
                 }
             }
             .formStyle(.grouped)
@@ -173,17 +178,32 @@ struct AddScheduleView: View {
         let schedule: SyncSchedule
         switch scheduleType {
         case .interval:
-            schedule = SyncSchedule(type: .interval, intervalMinutes: intervalMinutes)
+            schedule = SyncSchedule(
+                isEnabled: true,
+                scheduleType: .interval,
+                intervalMinutes: intervalMinutes
+            )
         case .daily:
-            let hour = Calendar.current.component(.hour, from: dailyTime)
-            let minute = Calendar.current.component(.minute, from: dailyTime)
-            schedule = SyncSchedule(type: .daily, hour: hour, minute: minute)
+            schedule = SyncSchedule(
+                isEnabled: true,
+                scheduleType: .daily,
+                timeOfDay: dailyTime
+            )
         case .weekly:
-            schedule = SyncSchedule(type: .weekly, weekdays: Array(selectedWeekdays))
+            schedule = SyncSchedule(
+                isEnabled: true,
+                scheduleType: .weekly,
+                timeOfDay: dailyTime,
+                weekdays: Array(selectedWeekdays)
+            )
+        case .manual:
+            return
         }
         job.schedules.append(schedule)
         if schedule.isEnabled {
-            SchedulerService.shared.registerSchedule(schedule, for: job)
+            Task {
+                try? await SchedulerService.shared.enableSchedule(for: job, schedule: schedule)
+            }
         }
         appState.saveJobs()
     }
@@ -191,21 +211,16 @@ struct AddScheduleView: View {
 
 /// Weekday picker component
 struct WeekdayPicker: View {
-    @Binding var selectedDays: Set<Int>
-    
-    private let weekdays = [
-        (1, "Sun"), (2, "Mon"), (3, "Tue"), (4, "Wed"),
-        (5, "Thu"), (6, "Fri"), (7, "Sat")
-    ]
+    @Binding var selectedDays: Set<Weekday>
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Select Days")
                 .font(.subheadline)
             HStack {
-                ForEach(weekdays, id: \.0) { day, name in
+                ForEach(Weekday.allCases) { day in
                     Button(action: { toggleDay(day) }) {
-                        Text(name)
+                        Text(day.shortName)
                             .font(.caption)
                             .frame(width: 36, height: 36)
                             .background(selectedDays.contains(day) ? Color.accentColor : Color.clear)
@@ -218,7 +233,7 @@ struct WeekdayPicker: View {
         }
     }
     
-    private func toggleDay(_ day: Int) {
+    private func toggleDay(_ day: Weekday) {
         if selectedDays.contains(day) {
             selectedDays.remove(day)
         } else {

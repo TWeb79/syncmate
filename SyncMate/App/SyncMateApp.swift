@@ -44,7 +44,7 @@ struct ContentView: View {
     
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
-            SidebarView()
+            JobListView()
         } detail: {
             if let job = appState.selectedJob,
                let index = appState.jobs.firstIndex(where: { $0.id == job.id }) {
@@ -54,9 +54,9 @@ struct ContentView: View {
                 ))
             } else {
                 EmptyStateView(
-                    icon: "folder.badge.plus",
                     title: "No Job Selected",
                     message: "Select a sync job from the sidebar or create a new one",
+                    systemImage: "folder.badge.plus",
                     actionTitle: "Create Job",
                     action: { appState.addJob() }
                 )
@@ -100,7 +100,7 @@ struct JobDetailView: View {
                 }
                 .tag(0)
             
-            JobSettingsView(job: $job, appState: appState)
+            JobSettingsView(appState: appState, job: $job)
                 .tabItem {
                     Label("Settings", systemImage: "gearshape")
                 }
